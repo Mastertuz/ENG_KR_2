@@ -32,6 +32,7 @@ const trainings = [
   ['definitions', 'type', 'Узнать термин', 'Введите термин по его определению.'],
   ['definitions', 'match', 'Термин и определение', 'Соберите пары из терминов и определений.'],
   ['abbreviations', 'choice', 'Расшифровка', 'Выберите правильную полную форму аббревиатуры.'],
+  ['abbreviations', 'typeFull', 'Аббревиатура → расшифровка', 'Введите полную форму показанной аббревиатуры.'],
   ['abbreviations', 'type', 'Написать аббревиатуру', 'Введите аббревиатуру по расшифровке.'],
   ['abbreviations', 'match', 'Пары аббревиатур', 'Сопоставьте сокращения с полными названиями.'],
 ].map(([section, mode, title, description], id) => ({ id, section, mode, title, description }));
@@ -39,6 +40,7 @@ const trainings = [
 const countOptions = {
   choice: [5, 10, 15, 20],
   type: [5, 10, 15, 20],
+  typeFull: [5, 10, 15, 20],
   match: [4, 6, 8, 10],
 };
 
@@ -176,6 +178,10 @@ function isCloseAnswer(userAnswer, correctAnswer) {
   return parts.some((part) => part.length > 2 && (user === part || user.includes(part) || part.includes(user)));
 }
 
+function isReverseTypeQuestion() {
+  return state.training.mode === 'type';
+}
+
 function startTraining(id, requestedCount) {
   const training = trainings.find((item) => item.id === Number(id));
   const meta = sectionMeta[training.section];
@@ -294,7 +300,7 @@ function renderQuestion() {
   els.checkBtn.disabled = false;
   updateProgress();
   if (state.training.mode === 'choice') renderChoiceQuestion();
-  if (state.training.mode === 'type') renderTypeQuestion();
+  if (state.training.mode === 'type' || state.training.mode === 'typeFull') renderTypeQuestion();
   if (state.training.mode === 'match') renderMatchQuestion();
 }
 
@@ -320,7 +326,7 @@ function renderChoiceQuestion() {
 
 function renderTypeQuestion() {
   const item = currentQuestion();
-  const reverse = true;
+  const reverse = isReverseTypeQuestion();
   const prompt = state.meta.prompt(item, reverse);
   els.questionArea.innerHTML = `
     <div class="prompt-card">
@@ -369,9 +375,9 @@ function checkAnswer() {
     markChoiceButtons(correctAnswer, userAnswer);
   }
 
-  if (state.training.mode === 'type') {
+  if (state.training.mode === 'type' || state.training.mode === 'typeFull') {
     userAnswer = document.querySelector('#answerInput')?.value || '';
-    const reverse = true;
+    const reverse = isReverseTypeQuestion();
     correctAnswer = state.meta.answer(item, reverse);
     ok = isCloseAnswer(userAnswer, correctAnswer);
   }
@@ -407,7 +413,9 @@ function checkAnswer() {
   } else if (ok) {
     showFeedback('ok', 'Все пары собраны верно.');
   } else if (state.training.mode !== 'match') {
-    const prompt = state.training.mode === 'type' ? state.meta.prompt(item, true) : state.meta.prompt(item);
+    const prompt = state.training.mode === 'type' || state.training.mode === 'typeFull'
+      ? state.meta.prompt(item, isReverseTypeQuestion())
+      : state.meta.prompt(item);
     state.mistakes.push({ prompt, userAnswer: userAnswer || 'нет ответа', correctAnswer });
     showFeedback('bad', `Ошибка. Правильный ответ: ${escapeHtml(correctAnswer)}`);
   } else {
@@ -541,7 +549,7 @@ els.questionArea.addEventListener('click', (event) => {
 });
 
 els.questionArea.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter' && state?.training.mode === 'type' && !state.checked) {
+  if (event.key === 'Enter' && (state?.training.mode === 'type' || state?.training.mode === 'typeFull') && !state.checked) {
     checkAnswer();
   }
 });
