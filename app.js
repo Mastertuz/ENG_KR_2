@@ -25,17 +25,10 @@ const sectionMeta = {
 };
 
 const trainings = [
-  ['translations', 'choice', 'Выбор перевода', 'Выберите правильный перевод из четырёх вариантов.'],
-  ['translations', 'typeFull', 'English → Русский', 'Введите русский перевод английского термина.'],
   ['translations', 'type', 'Русский → English', 'Введите английский термин по русскому переводу.'],
-  ['translations', 'match', 'Сопоставление', 'Соедините английские термины с русскими значениями.'],
   ['definitions', 'choice', 'Выбор определения', 'Найдите верное определение для термина.'],
   ['definitions', 'type', 'Узнать термин', 'Введите термин по его определению.'],
-  ['definitions', 'match', 'Термин и определение', 'Соберите пары из терминов и определений.'],
-  ['abbreviations', 'choice', 'Расшифровка', 'Выберите правильную полную форму аббревиатуры.'],
   ['abbreviations', 'typeFull', 'Аббревиатура → расшифровка', 'Введите полную форму показанной аббревиатуры.'],
-  ['abbreviations', 'type', 'Написать аббревиатуру', 'Введите аббревиатуру по расшифровке.'],
-  ['abbreviations', 'match', 'Пары аббревиатур', 'Сопоставьте сокращения с полными названиями.'],
 ].map(([section, mode, title, description], id) => ({ id, section, mode, title, description }));
 
 const countOptions = {
@@ -164,19 +157,57 @@ function normalize(value) {
 }
 
 function splitAnswers(answer) {
-  return String(answer)
-    .split(/\s*(?:;|,|\/|\bor\b|\band\b)\s*/i)
-    .map(normalize)
-    .filter(Boolean);
+  const raw = String(answer);
+  const variants = new Set([normalize(raw)]);
+  const parenthetical = [...raw.matchAll(/\(([^)]+)\)/g)].map((match) => match[1]);
+  parenthetical.forEach((part) => variants.add(normalize(part)));
+  variants.add(normalize(raw.replace(/\([^)]*\)/g, ' ')));
+  raw
+    .split(/\s*(?:;|,|\/|\bor\b)\s*/i)
+    .forEach((part) => {
+      variants.add(normalize(part));
+      variants.add(normalize(part.replace(/\([^)]*\)/g, ' ')));
+    });
+  return [...variants].filter(Boolean);
 }
 
 function isCloseAnswer(userAnswer, correctAnswer) {
   const user = normalize(userAnswer);
-  const correct = normalize(correctAnswer);
   if (!user) return false;
-  if (user === correct) return true;
   const parts = splitAnswers(correctAnswer);
-  return parts.some((part) => part.length > 2 && (user === part || user.includes(part) || part.includes(user)));
+  if (parts.includes(user)) return true;
+
+  const minExpectedLength = Math.min(...parts.map((part) => part.length));
+  if (user.length < Math.min(3, minExpectedLength)) return false;
+
+  return parts.some((part) => {
+    if (part.length < 5 || user.length < 5) return false;
+    const distance = levenshteinDistance(user, part);
+    const similarity = 1 - distance / Math.max(user.length, part.length);
+    return similarity >= 0.86;
+  });
+}
+
+function levenshteinDistance(a, b) {
+  const previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  const current = Array.from({ length: b.length + 1 }, () => 0);
+
+  for (let i = 1; i <= a.length; i += 1) {
+    current[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      current[j] = Math.min(
+        current[j - 1] + 1,
+        previous[j] + 1,
+        previous[j - 1] + cost,
+      );
+    }
+    for (let j = 0; j <= b.length; j += 1) {
+      previous[j] = current[j];
+    }
+  }
+
+  return previous[b.length];
 }
 
 function isReverseTypeQuestion() {
