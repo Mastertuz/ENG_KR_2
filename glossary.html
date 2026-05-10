@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Справочник терминов</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Контрольная работа по английскому</p>
+        <h1>Справочник</h1>
+      </div>
+      <nav class="site-nav" aria-label="Навигация">
+        <a class="nav-link" href="index.html">Тренировки</a>
+        <a class="nav-link active" href="glossary.html">Справочник</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="glossary-panel glossary-page" id="glossaryPanel" aria-label="Список слов">
+        <div class="glossary-head">
+          <div>
+            <p class="eyebrow">Списки</p>
+            <h2>Слова, термины и аббревиатуры</h2>
+          </div>
+          <input class="glossary-search" id="glossarySearch" type="text" placeholder="Поиск" />
+        </div>
+        <div class="glossary-tabs" id="glossaryTabs"></div>
+        <div class="glossary-status" id="glossaryStatus"></div>
+        <div class="glossary-list" id="glossaryList"></div>
+      </section>
+    </main>
+
+    <script src="terms-data.js"></script>
+    <script src="glossary.js"></script>
+  </body>
+</html>

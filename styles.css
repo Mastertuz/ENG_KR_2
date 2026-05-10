@@ -50,6 +50,33 @@ main {
   padding: 22px 0 14px;
 }
 
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.nav-link {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.72);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.nav-link.active {
+  color: #fff;
+  border-color: var(--green);
+  background: var(--green);
+}
+
 h1,
 h2,
 h3,
@@ -127,6 +154,138 @@ h2 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   padding: 18px 0 38px;
+}
+
+.glossary-panel {
+  margin-top: 16px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 26px rgba(34, 48, 38, 0.08);
+}
+
+.glossary-page {
+  margin-bottom: 42px;
+}
+
+.glossary-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: 16px;
+  align-items: end;
+}
+
+.glossary-search {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff;
+}
+
+.glossary-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.glossary-tab {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #f8fbf6;
+  font-weight: 800;
+}
+
+.glossary-tab.active {
+  color: #fff;
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.glossary-status {
+  margin: 14px 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.glossary-list {
+  max-height: 430px;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 2px;
+}
+
+.glossary-page .glossary-list {
+  max-height: calc(100vh - 250px);
+}
+
+.glossary-row {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 0.9fr) minmax(0, 1.2fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfdf9;
+}
+
+.glossary-row-wide {
+  grid-template-columns: 44px minmax(0, 0.65fr) minmax(0, 1.6fr);
+}
+
+.row-number {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.glossary-row strong,
+.glossary-row p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
+}
+
+.glossary-row p {
+  color: var(--muted);
+}
+
+.speakable {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.audio-btn {
+  flex: 0 0 28px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--green-dark);
+  background: #eef7ed;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.audio-btn:hover {
+  border-color: var(--green);
+  color: #fff;
+  background: var(--green);
 }
 
 .training-card {
@@ -550,14 +709,18 @@ h2 {
   .hero-panel,
   .quiz-head,
   .match-layout,
-  .picker-tools {
+  .picker-tools,
+  .glossary-head {
     grid-template-columns: 1fr;
   }
 
   .score-strip,
   .training-grid,
   .options-grid,
-  .picker-list {
+  .picker-list,
+  .glossary-list,
+  .glossary-row,
+  .glossary-row-wide {
     grid-template-columns: 1fr;
   }
 
@@ -568,5 +731,10 @@ h2 {
   .topbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .site-nav {
+    justify-content: flex-start;
+    width: 100%;
   }
 }
