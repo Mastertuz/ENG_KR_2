@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>English Control Practice</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Контрольная работа по английскому</p>
+        <h1>Тренажёр терминов</h1>
+      </div>
+      <nav class="site-nav" aria-label="Навигация">
+        <a class="nav-link" href="index.html">Главная</a>
+        <a class="nav-link active" href="kr2.html">КР-2</a>
+        <a class="nav-link" href="glossary.html">Справочник</a>
+        <a class="nav-link" href="kr_3/answers.html">КР-3</a>
+        <button class="ghost-btn" id="resetStatsBtn" type="button">Сбросить статистику</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero-panel" aria-label="Обзор">
+        <div>
+          <h2>4 интерактивные тренировки</h2>
+          <p>
+            Выберите карточку, ответьте на вопросы, проверьте себя и посмотрите ошибки в конце.
+          </p>
+        </div>
+        <div class="score-strip" id="overallStats"></div>
+      </section>
+
+      <section class="training-grid" id="trainingGrid" aria-label="Карточки тренировок"></section>
+
+      <section class="quiz-panel hidden" id="quizPanel" aria-live="polite">
+        <div class="quiz-head">
+          <button class="ghost-btn" id="backBtn" type="button">К карточкам</button>
+          <div>
+            <p class="eyebrow" id="quizSection"></p>
+            <h2 id="quizTitle"></h2>
+          </div>
+          <div class="progress-pill" id="progressText"></div>
+        </div>
+
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressBar"></div>
+        </div>
+
+        <div class="question-area" id="questionArea"></div>
+
+        <div class="quiz-actions">
+          <button class="primary-btn" id="checkBtn" type="button">Проверить</button>
+          <button class="primary-btn hidden" id="nextBtn" type="button">Дальше</button>
+        </div>
+      </section>
+
+      <section class="result-panel hidden" id="resultPanel">
+        <div class="result-summary">
+          <p class="eyebrow">Итог тренировки</p>
+          <h2 id="resultTitle"></h2>
+          <p id="resultText"></p>
+        </div>
+        <div class="mistakes-list" id="mistakesList"></div>
+        <div class="result-actions">
+          <button class="primary-btn" id="retryBtn" type="button">Повторить тренировку</button>
+          <button class="ghost-btn" id="homeBtn" type="button">Вернуться к карточкам</button>
+        </div>
+      </section>
+
+      <section class="picker-panel hidden" id="pickerPanel" aria-live="polite">
+        <div class="picker-head">
+          <div>
+            <p class="eyebrow" id="pickerSection"></p>
+            <h2 id="pickerTitle">Выбор слов</h2>
+          </div>
+          <button class="ghost-btn" id="closePickerBtn" type="button">Закрыть</button>
+        </div>
+        <div class="picker-tools">
+          <input class="answer-input" id="pickerSearch" type="text" placeholder="Поиск по терминам" />
+          <div class="picker-buttons">
+            <button class="ghost-btn" id="selectAllBtn" type="button">Выбрать всё</button>
+            <button class="ghost-btn" id="clearSelectionBtn" type="button">Очистить</button>
+          </div>
+        </div>
+        <div class="picker-status" id="pickerStatus"></div>
+        <div class="picker-list" id="pickerList"></div>
+        <div class="result-actions">
+          <button class="primary-btn" id="applySelectionBtn" type="button">Применить выбор</button>
+          <button class="ghost-btn" id="cancelSelectionBtn" type="button">Отмена</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="terms-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

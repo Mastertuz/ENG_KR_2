@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control Module 3 Answers</title>
+    <link rel="stylesheet" href="answers.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Essential English for IT Students. Part 2</p>
+        <h1>Control Module 3 Answers</h1>
+        <p class="lead">Answers to the questions from “Вопросы_ИТ_КМ 3-1.pdf”.</p>
+      </div>
+      <nav class="site-nav" aria-label="Navigation">
+        <a class="source-link" href="../index.html">Главная</a>
+        <a class="source-link" href="../kr2.html">КР-2</a>
+        <a class="source-link" href="../glossary.html">Справочник</a>
+        <a class="source-link active" href="answers.html">КР-3</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="mode-switch" aria-label="Page mode">
+        <button class="chip active" id="showAnswersBtn" type="button">Ответы</button>
+        <button class="chip" id="showPracticeBtn" type="button">Тренировка</button>
+      </section>
+
+      <section id="answersPanel">
+        <section class="toolbar" aria-label="Search and filters">
+          <input id="searchInput" type="search" placeholder="Search questions or answers" />
+          <div class="chips" id="unitFilters"></div>
+        </section>
+
+        <section class="summary" id="summary"></section>
+        <section class="answer-list" id="answerList"></section>
+      </section>
+
+      <section class="practice-panel hidden" id="practicePanel">
+        <div class="practice-setup" id="practiceSetup">
+          <div>
+            <p class="eyebrow">Training mode</p>
+            <h2>Practice oral answers</h2>
+            <p>Write your answer, check keyword coverage, then compare it with the model answer.</p>
+          </div>
+          <div class="practice-controls">
+            <label>
+              Unit
+              <select id="practiceUnit"></select>
+            </label>
+            <label>
+              Questions
+              <select id="practiceCount">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="all">All</option>
+              </select>
+            </label>
+            <button class="copy-btn start-practice" id="startPracticeBtn" type="button">Start practice</button>
+          </div>
+        </div>
+
+        <div class="practice-quiz hidden" id="practiceQuiz">
+          <div class="quiz-top">
+            <button class="source-link" id="stopPracticeBtn" type="button">Back to setup</button>
+            <div class="practice-progress" id="practiceProgress"></div>
+          </div>
+          <div class="question-box">
+            <span class="unit" id="practiceUnitLabel"></span>
+            <h2 id="practiceQuestion"></h2>
+          </div>
+          <textarea id="practiceAnswer" placeholder="Write your answer in English"></textarea>
+          <div class="practice-actions">
+            <button class="copy-btn start-practice" id="checkPracticeBtn" type="button">Check answer</button>
+            <button class="copy-btn hidden" id="knowBtn" type="button">I knew it</button>
+            <button class="copy-btn hidden" id="repeatBtn" type="button">Repeat later</button>
+          </div>
+          <div class="practice-feedback hidden" id="practiceFeedback"></div>
+        </div>
+
+        <div class="practice-result hidden" id="practiceResult"></div>
+      </section>
+    </main>
+
+    <script src="answers.js"></script>
+  </body>
+</html>
