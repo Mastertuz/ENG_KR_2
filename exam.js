@@ -333,10 +333,28 @@ const fullStatus = document.querySelector('#fullStatus');
 const fullList = document.querySelector('#fullList');
 const fullMaterial = document.querySelector('#fullMaterial');
 const showAllBtn = document.querySelector('#showAllBtn');
+const startTrainingBtn = document.querySelector('#startTrainingBtn');
+const trainingPanel = document.querySelector('#trainingPanel');
+const trainingResult = document.querySelector('#trainingResult');
+const trainingType = document.querySelector('#trainingType');
+const trainingTitle = document.querySelector('#trainingTitle');
+const trainingProgress = document.querySelector('#trainingProgress');
+const trainingPrompt = document.querySelector('#trainingPrompt');
+const trainingAnswer = document.querySelector('#trainingAnswer');
+const trainingFeedback = document.querySelector('#trainingFeedback');
+const checkTrainingBtn = document.querySelector('#checkTrainingBtn');
+const nextTrainingBtn = document.querySelector('#nextTrainingBtn');
 
 const fullState = {
   section: 'all',
   query: '',
+};
+
+const trainingState = {
+  tasks: [],
+  index: 0,
+  correct: 0,
+  mistakes: [],
 };
 
 function shuffle(array) {
@@ -357,7 +375,71 @@ function escapeHtml(value) {
 }
 
 function normalize(value) {
-  return String(value).toLowerCase().trim();
+  return String(value)
+    .toLowerCase()
+    .replace(/[ё]/g, 'е')
+    .replace(/[“”"'.(),;:!?/\\-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function isCloseAnswer(userAnswer, correctAnswer) {
+  const user = normalize(userAnswer);
+  const correct = normalize(correctAnswer);
+  if (!user) return false;
+  if (user === correct) return true;
+  const variants = new Set([correct]);
+  String(correctAnswer).split(/\s*(?:;|,|\/|\bor\b)\s*/i).forEach((part) => variants.add(normalize(part)));
+  String(correctAnswer).match(/\(([^)]+)\)/g)?.forEach((part) => variants.add(normalize(part.replace(/[()]/g, ''))));
+  return [...variants].filter(Boolean).some((variant) => user === variant);
+}
+
+function extractKeywords(text) {
+  const stopWords = new Set(['about', 'after', 'also', 'based', 'because', 'between', 'called', 'computer', 'computers', 'data', 'different', 'example', 'examples', 'from', 'have', 'into', 'main', 'many', 'more', 'most', 'network', 'networks', 'other', 'should', 'system', 'systems', 'than', 'that', 'their', 'them', 'there', 'these', 'they', 'this', 'through', 'used', 'uses', 'using', 'when', 'where', 'which', 'with']);
+  const words = normalize(text).split(' ').filter((word) => word.length >= 5 && !stopWords.has(word));
+  return [...new Set(words)].slice(0, 18);
+}
+
+function analyzeOralAnswer(userAnswer, modelAnswer) {
+  const keywords = extractKeywords(modelAnswer);
+  const user = normalize(userAnswer);
+  const matched = keywords.filter((word) => user.includes(word));
+  const missing = keywords.filter((word) => !user.includes(word));
+  const score = keywords.length ? Math.round((matched.length / keywords.length) * 100) : 0;
+  return { score, matched, missing };
+}
+
+function buildTrainingTasks() {
+  return [
+    ...sample(termData.translations, 4).map((item) => ({
+      type: 'Перевод',
+      title: 'Русский → English',
+      prompt: item.ru,
+      answer: item.en,
+      mode: 'short',
+    })),
+    ...sample(termData.definitions, 6).map((item) => ({
+      type: 'Определение',
+      title: 'Define the term in English',
+      prompt: item.term,
+      answer: item.definition,
+      mode: 'oral',
+    })),
+    ...sample(termData.abbreviations, 2).map((item) => ({
+      type: 'Аббревиатура',
+      title: 'Write the full form',
+      prompt: item.abbr,
+      answer: item.full,
+      mode: 'short',
+    })),
+    ...sample(examQuestions, 6).map((item) => ({
+      type: 'Устный вопрос',
+      title: item.semester === 3 ? '3 semester topic' : '4 semester topic',
+      prompt: item.question,
+      answer: item.answer.join('\n\n'),
+      mode: 'oral',
+    })),
+  ];
 }
 
 function fullLabel(section, item) {
@@ -538,6 +620,107 @@ function renderTicket() {
   `;
 }
 
+function startExamTraining() {
+  trainingState.tasks = buildTrainingTasks();
+  trainingState.index = 0;
+  trainingState.correct = 0;
+  trainingState.mistakes = [];
+  trainingResult.classList.add('hidden');
+  trainingPanel.classList.remove('hidden');
+  trainingPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  renderTrainingTask();
+}
+
+function renderTrainingTask() {
+  const task = trainingState.tasks[trainingState.index];
+  trainingType.textContent = task.type;
+  trainingTitle.textContent = task.title;
+  trainingProgress.textContent = `${trainingState.index + 1} / ${trainingState.tasks.length}`;
+  trainingPrompt.innerHTML = `<strong>${escapeHtml(task.prompt)}</strong>`;
+  trainingAnswer.value = '';
+  trainingAnswer.disabled = false;
+  trainingFeedback.classList.add('hidden');
+  trainingFeedback.innerHTML = '';
+  checkTrainingBtn.classList.remove('hidden');
+  nextTrainingBtn.classList.add('hidden');
+  trainingAnswer.focus();
+}
+
+function checkTrainingTask() {
+  const task = trainingState.tasks[trainingState.index];
+  const userAnswer = trainingAnswer.value;
+  let isCorrect = false;
+  let feedback = '';
+
+  if (task.mode === 'short') {
+    isCorrect = isCloseAnswer(userAnswer, task.answer);
+    feedback = `
+      <div class="answer-check ${isCorrect ? 'correct' : 'wrong'}">
+        <strong>${isCorrect ? 'Верно' : 'Нужно повторить'}</strong>
+        <p>Правильный ответ: ${escapeHtml(task.answer)}</p>
+      </div>
+    `;
+  } else {
+    const analysis = analyzeOralAnswer(userAnswer, task.answer);
+    isCorrect = analysis.score >= 45;
+    feedback = `
+      <div class="answer-check ${isCorrect ? 'correct' : 'wrong'}">
+        <strong>Покрытие ключевых слов: ${analysis.score}%</strong>
+        <p>Нашлось: ${analysis.matched.join(', ') || 'нет совпадений'}</p>
+        <p>Не хватает: ${analysis.missing.slice(0, 10).join(', ') || 'основные слова есть'}</p>
+      </div>
+      <div class="answer">
+        ${task.answer.split('\n\n').map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+      </div>
+    `;
+  }
+
+  if (isCorrect) {
+    trainingState.correct += 1;
+  } else {
+    trainingState.mistakes.push({ prompt: task.prompt, answer: task.answer });
+  }
+  trainingAnswer.disabled = true;
+  trainingFeedback.innerHTML = feedback;
+  trainingFeedback.classList.remove('hidden');
+  checkTrainingBtn.classList.add('hidden');
+  nextTrainingBtn.classList.remove('hidden');
+}
+
+function nextTrainingTask() {
+  if (trainingState.index < trainingState.tasks.length - 1) {
+    trainingState.index += 1;
+    renderTrainingTask();
+  } else {
+    renderTrainingResult();
+  }
+}
+
+function renderTrainingResult() {
+  const total = trainingState.tasks.length;
+  const percent = Math.round((trainingState.correct / total) * 100);
+  trainingPanel.classList.add('hidden');
+  trainingResult.classList.remove('hidden');
+  trainingResult.innerHTML = `
+    <div class="training-result-card">
+      <p class="eyebrow">Итог тренировки</p>
+      <h2>${trainingState.correct} / ${total} — ${percent}%</h2>
+      <p>${trainingState.mistakes.length ? 'Ниже задания, которые стоит повторить.' : 'Все задания зачтены.'}</p>
+      <div class="repeat-list">
+        ${trainingState.mistakes.map((item) => `
+          <article>
+            <strong>${escapeHtml(item.prompt)}</strong>
+            <p>${escapeHtml(item.answer)}</p>
+          </article>
+        `).join('')}
+      </div>
+      <button class="primary-btn" type="button" id="restartTrainingBtn">Новая тренировка</button>
+    </div>
+  `;
+  document.querySelector('#restartTrainingBtn').addEventListener('click', startExamTraining);
+  trainingResult.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 function renderQuestions() {
   const query = normalize(questionSearch.value);
   const semester = semesterFilter.value;
@@ -562,6 +745,9 @@ function renderQuestions() {
 }
 
 document.querySelector('#newTicketBtn').addEventListener('click', renderTicket);
+startTrainingBtn.addEventListener('click', startExamTraining);
+checkTrainingBtn.addEventListener('click', checkTrainingTask);
+nextTrainingBtn.addEventListener('click', nextTrainingTask);
 showAllBtn.addEventListener('click', () => {
   fullState.section = 'all';
   fullState.query = '';

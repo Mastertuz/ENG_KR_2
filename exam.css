@@ -90,6 +90,10 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   background: var(--green);
 }
 
+.hidden {
+  display: none !important;
+}
+
 .exam-layout {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -244,6 +248,112 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
 .ticket-grid {
   display: grid;
   gap: 12px;
+}
+
+.training-panel,
+.training-result {
+  padding: 20px;
+  margin-bottom: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.training-card,
+.training-result-card {
+  display: grid;
+  gap: 14px;
+}
+
+.training-progress {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--green-dark);
+  background: #f3faf1;
+  font-weight: 900;
+}
+
+.training-prompt {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfdf9;
+  font-size: 22px;
+  line-height: 1.35;
+}
+
+.training-actions {
+  justify-content: flex-start;
+}
+
+.training-feedback {
+  display: grid;
+  gap: 12px;
+}
+
+.answer-check {
+  padding: 14px;
+  border-radius: 8px;
+  line-height: 1.45;
+}
+
+.answer-check p {
+  margin-top: 6px;
+}
+
+.answer-check.correct {
+  color: #0f5132;
+  background: #e8f6ed;
+}
+
+.answer-check.wrong {
+  color: #842719;
+  background: #fff0ed;
+}
+
+.training-feedback .answer {
+  display: grid;
+  gap: 8px;
+  color: var(--ink);
+  background: #fbfdf9;
+  border: 1px solid var(--line);
+}
+
+.training-feedback .answer p {
+  line-height: 1.5;
+}
+
+.training-result-card > p:not(.eyebrow) {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.repeat-list {
+  display: grid;
+  gap: 10px;
+}
+
+.repeat-list:empty {
+  display: none;
+}
+
+.repeat-list article {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfdf9;
+}
+
+.repeat-list p {
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.45;
 }
 
 .ticket-group {

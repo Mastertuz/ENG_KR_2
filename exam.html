@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Экзамен по английскому</title>
-    <link rel="stylesheet" href="exam.css?v=20260602" />
+    <link rel="stylesheet" href="exam.css?v=20260603" />
   </head>
   <body>
     <header class="page-header">
@@ -42,12 +42,34 @@
             <h2>Случайный билет</h2>
           </div>
           <div class="head-actions">
+            <button class="primary-btn" id="startTrainingBtn" type="button">Начать тренировку</button>
             <button class="ghost-btn" id="showAllBtn" type="button">Посмотреть всё</button>
             <button class="primary-btn" id="newTicketBtn" type="button">Новый билет</button>
           </div>
         </div>
         <div class="ticket-grid" id="ticketGrid"></div>
       </section>
+
+      <section class="training-panel hidden" id="trainingPanel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" id="trainingType">Экзамен</p>
+            <h2 id="trainingTitle">Тренировка</h2>
+          </div>
+          <div class="training-progress" id="trainingProgress"></div>
+        </div>
+        <div class="training-card">
+          <div class="training-prompt" id="trainingPrompt"></div>
+          <textarea class="answer-input" id="trainingAnswer" rows="5" placeholder="Введите ответ"></textarea>
+          <div class="head-actions training-actions">
+            <button class="primary-btn" id="checkTrainingBtn" type="button">Проверить</button>
+            <button class="ghost-btn hidden" id="nextTrainingBtn" type="button">Дальше</button>
+          </div>
+          <div class="training-feedback hidden" id="trainingFeedback"></div>
+        </div>
+      </section>
+
+      <section class="training-result hidden" id="trainingResult"></section>
 
       <section class="full-panel" id="fullMaterial">
         <div class="section-head">
@@ -82,6 +104,6 @@
     </main>
 
     <script src="terms-data.js"></script>
-    <script src="exam.js?v=20260602"></script>
+    <script src="exam.js?v=20260603"></script>
   </body>
 </html>
