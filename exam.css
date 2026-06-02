@@ -101,6 +101,63 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   margin-bottom: 16px;
 }
 
+.exam-menu {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.exam-action-card {
+  min-height: 210px;
+  display: grid;
+  align-content: space-between;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+}
+
+.exam-action-card span {
+  width: max-content;
+  max-width: 100%;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--green);
+  font-weight: 900;
+}
+
+.exam-action-card strong {
+  font-size: clamp(26px, 3vw, 40px);
+  line-height: 1.05;
+}
+
+.exam-action-card p {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.42;
+}
+
+.exam-action-card.primary {
+  color: #fff;
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.exam-action-card.primary span {
+  color: var(--green-dark);
+  background: #fff;
+}
+
+.exam-action-card.primary p {
+  color: rgba(255, 255, 255, 0.86);
+}
+
 .info-card,
 .ticket-panel,
 .questions-panel {
@@ -143,7 +200,13 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
 
 .tools {
   display: grid;
-  grid-template-columns: minmax(180px, 260px) 150px;
+  grid-template-columns: minmax(180px, 260px) 150px auto;
+  gap: 10px;
+}
+
+.materials-tools {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
   gap: 10px;
 }
 
@@ -156,6 +219,7 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
 
 .tools input,
 .tools select,
+.materials-tools input,
 .full-panel input,
 .answer-input {
   min-height: 42px;
@@ -451,7 +515,9 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   }
 
   .exam-layout,
+  .exam-menu,
   .tools,
+  .materials-tools,
   .full-panel .section-head,
   .full-row,
   .full-row-wide,

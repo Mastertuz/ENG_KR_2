@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Экзамен по английскому</title>
-    <link rel="stylesheet" href="exam.css?v=20260603" />
+    <link rel="stylesheet" href="exam.css?v=20260603b" />
   </head>
   <body>
     <header class="page-header">
       <div>
         <p class="eyebrow">Иностранный язык после 4 семестра</p>
         <h1>Экзамен</h1>
-        <p class="lead">Билет: лексика, определения, аббревиатуры и 6 устных вопросов по темам 3 и 4 семестров.</p>
+        <p class="lead">Отдельные страницы для тренировки, случайного билета, полного материала и списка вопросов.</p>
       </div>
       <nav class="site-nav" aria-label="Навигация">
         <a href="index.html">Главная</a>
@@ -35,75 +35,28 @@
         </article>
       </section>
 
-      <section class="ticket-panel">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Тренировка билета</p>
-            <h2>Случайный билет</h2>
-          </div>
-          <div class="head-actions">
-            <button class="primary-btn" id="startTrainingBtn" type="button">Начать тренировку</button>
-            <button class="ghost-btn" id="showAllBtn" type="button">Посмотреть всё</button>
-            <button class="primary-btn" id="newTicketBtn" type="button">Новый билет</button>
-          </div>
-        </div>
-        <div class="ticket-grid" id="ticketGrid"></div>
-      </section>
-
-      <section class="training-panel hidden" id="trainingPanel">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow" id="trainingType">Экзамен</p>
-            <h2 id="trainingTitle">Тренировка</h2>
-          </div>
-          <div class="training-progress" id="trainingProgress"></div>
-        </div>
-        <div class="training-card">
-          <div class="training-prompt" id="trainingPrompt"></div>
-          <textarea class="answer-input" id="trainingAnswer" rows="5" placeholder="Введите ответ"></textarea>
-          <div class="head-actions training-actions">
-            <button class="primary-btn" id="checkTrainingBtn" type="button">Проверить</button>
-            <button class="ghost-btn hidden" id="nextTrainingBtn" type="button">Дальше</button>
-          </div>
-          <div class="training-feedback hidden" id="trainingFeedback"></div>
-        </div>
-      </section>
-
-      <section class="training-result hidden" id="trainingResult"></section>
-
-      <section class="full-panel" id="fullMaterial">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Полный материал</p>
-            <h2>Все задания отдельно</h2>
-          </div>
-          <input id="fullSearch" type="search" placeholder="Поиск по материалу" />
-        </div>
-        <div class="full-tabs" id="fullTabs"></div>
-        <div class="full-status" id="fullStatus"></div>
-        <div class="full-list" id="fullList"></div>
-      </section>
-
-      <section class="questions-panel">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow">Все темы</p>
-            <h2>Экзаменационные вопросы и ответы</h2>
-          </div>
-          <div class="tools">
-            <input id="questionSearch" type="search" placeholder="Поиск" />
-            <select id="semesterFilter">
-              <option value="all">Все семестры</option>
-              <option value="3">3 семестр</option>
-              <option value="4">4 семестр</option>
-            </select>
-          </div>
-        </div>
-        <div class="questions-list" id="questionsList"></div>
+      <section class="exam-menu" aria-label="Разделы экзамена">
+        <a class="exam-action-card primary" href="exam-training.html">
+          <span>Тренировка</span>
+          <strong>Пройти экзамен пошагово</strong>
+          <p>Сайт проверит ответы и в конце покажет ошибки.</p>
+        </a>
+        <a class="exam-action-card" href="exam-ticket.html">
+          <span>Билет</span>
+          <strong>Случайный билет</strong>
+          <p>Все задания билета на одной странице с кнопками показа ответов.</p>
+        </a>
+        <a class="exam-action-card" href="exam-materials.html">
+          <span>Материал</span>
+          <strong>Все задания отдельно</strong>
+          <p>Переводы, термины, аббревиатуры и вопросы в полном объеме.</p>
+        </a>
+        <a class="exam-action-card" href="exam-questions.html">
+          <span>Темы</span>
+          <strong>Вопросы и ответы</strong>
+          <p>Отдельный список устных тем 3 и 4 семестров с поиском.</p>
+        </a>
       </section>
     </main>
-
-    <script src="terms-data.js"></script>
-    <script src="exam.js?v=20260603"></script>
   </body>
 </html>

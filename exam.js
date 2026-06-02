@@ -744,25 +744,25 @@ function renderQuestions() {
   `).join('');
 }
 
-document.querySelector('#newTicketBtn').addEventListener('click', renderTicket);
-startTrainingBtn.addEventListener('click', startExamTraining);
-checkTrainingBtn.addEventListener('click', checkTrainingTask);
-nextTrainingBtn.addEventListener('click', nextTrainingTask);
-showAllBtn.addEventListener('click', () => {
+document.querySelector('#newTicketBtn')?.addEventListener('click', renderTicket);
+startTrainingBtn?.addEventListener('click', startExamTraining);
+checkTrainingBtn?.addEventListener('click', checkTrainingTask);
+nextTrainingBtn?.addEventListener('click', nextTrainingTask);
+showAllBtn?.addEventListener('click', () => {
   fullState.section = 'all';
   fullState.query = '';
   fullSearch.value = '';
   renderFullList();
   fullMaterial.scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
-ticketGrid.addEventListener('click', (event) => {
+ticketGrid?.addEventListener('click', (event) => {
   const button = event.target.closest('.reveal-btn');
   if (!button) return;
   button.closest('.task-card').classList.toggle('revealed');
 });
-questionSearch.addEventListener('input', renderQuestions);
-semesterFilter.addEventListener('change', renderQuestions);
-fullTabs.addEventListener('click', (event) => {
+questionSearch?.addEventListener('input', renderQuestions);
+semesterFilter?.addEventListener('change', renderQuestions);
+fullTabs?.addEventListener('click', (event) => {
   const tab = event.target.closest('[data-full-section]');
   if (!tab) return;
   fullState.section = tab.dataset.fullSection;
@@ -770,11 +770,11 @@ fullTabs.addEventListener('click', (event) => {
   fullSearch.value = '';
   renderFullList();
 });
-fullSearch.addEventListener('input', () => {
+fullSearch?.addEventListener('input', () => {
   fullState.query = fullSearch.value;
   renderFullList();
 });
 
-renderTicket();
-renderFullList();
-renderQuestions();
+if (ticketGrid) renderTicket();
+if (fullList) renderFullList();
+if (questionsList) renderQuestions();

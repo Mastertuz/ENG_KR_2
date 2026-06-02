@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Материалы экзамена</title>
+    <link rel="stylesheet" href="exam.css?v=20260603b" />
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Экзамен</p>
+        <h1>Все задания отдельно</h1>
+        <p class="lead">Полный материал: переводы, определения терминов, аббревиатуры и экзаменационные вопросы.</p>
+      </div>
+      <nav class="site-nav" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="kr2.html">КР-2</a>
+        <a href="kr_3/answers.html">КР-3</a>
+        <a class="active" href="exam.html">Экзамен</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="full-panel" id="fullMaterial">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Полный материал</p>
+            <h2>Все вместе и по разделам</h2>
+          </div>
+          <div class="materials-tools">
+            <input id="fullSearch" type="search" placeholder="Поиск по материалу" />
+            <a class="ghost-btn" href="exam.html">Назад</a>
+          </div>
+        </div>
+        <div class="full-tabs" id="fullTabs"></div>
+        <div class="full-status" id="fullStatus"></div>
+        <div class="full-list" id="fullList"></div>
+      </section>
+    </main>
+
+    <script src="terms-data.js"></script>
+    <script src="exam.js?v=20260603b"></script>
+  </body>
+</html>

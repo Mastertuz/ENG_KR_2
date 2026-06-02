@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тренировка экзамена</title>
+    <link rel="stylesheet" href="exam.css?v=20260603b" />
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <p class="eyebrow">Экзамен</p>
+        <h1>Тренировка</h1>
+        <p class="lead">Пошаговый режим: переводы, определения, аббревиатуры и устные вопросы с итоговой статистикой.</p>
+      </div>
+      <nav class="site-nav" aria-label="Навигация">
+        <a href="index.html">Главная</a>
+        <a href="kr2.html">КР-2</a>
+        <a href="kr_3/answers.html">КР-3</a>
+        <a class="active" href="exam.html">Экзамен</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="ticket-panel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Режим тренировки</p>
+            <h2>Экзаменационный билет</h2>
+          </div>
+          <div class="head-actions">
+            <a class="ghost-btn" href="exam.html">Назад</a>
+            <button class="primary-btn" id="startTrainingBtn" type="button">Начать тренировку</button>
+          </div>
+        </div>
+        <p class="lead compact-lead">В тренировке 18 заданий: 4 перевода, 6 определений, 2 аббревиатуры и 6 устных вопросов.</p>
+      </section>
+
+      <section class="training-panel hidden" id="trainingPanel">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow" id="trainingType">Экзамен</p>
+            <h2 id="trainingTitle">Тренировка</h2>
+          </div>
+          <div class="training-progress" id="trainingProgress"></div>
+        </div>
+        <div class="training-card">
+          <div class="training-prompt" id="trainingPrompt"></div>
+          <textarea class="answer-input" id="trainingAnswer" rows="5" placeholder="Введите ответ"></textarea>
+          <div class="head-actions training-actions">
+            <button class="primary-btn" id="checkTrainingBtn" type="button">Проверить</button>
+            <button class="ghost-btn hidden" id="nextTrainingBtn" type="button">Дальше</button>
+          </div>
+          <div class="training-feedback hidden" id="trainingFeedback"></div>
+        </div>
+      </section>
+
+      <section class="training-result hidden" id="trainingResult"></section>
+    </main>
+
+    <script src="terms-data.js"></script>
+    <script src="exam.js?v=20260603b"></script>
+  </body>
+</html>
