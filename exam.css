@@ -117,7 +117,8 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
 }
 
 .ticket-panel,
-.questions-panel {
+.questions-panel,
+.full-panel {
   padding: 20px;
   margin-bottom: 18px;
 }
@@ -138,6 +139,7 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
 
 .tools input,
 .tools select,
+.full-panel input,
 .answer-input {
   min-height: 42px;
   width: 100%;
@@ -147,6 +149,71 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   color: var(--ink);
   background: #fff;
   font: inherit;
+}
+
+.full-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.full-tab {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #f8fbf6;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.full-tab.active {
+  color: #fff;
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.full-status {
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.full-list {
+  max-height: 620px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+  padding: 2px;
+}
+
+.full-row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 0.85fr) minmax(0, 1.25fr);
+  gap: 12px;
+  align-items: start;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfdf9;
+}
+
+.full-row-wide {
+  grid-template-columns: 56px minmax(0, 0.65fr) minmax(0, 1.6fr);
+}
+
+.full-row strong,
+.full-row p {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  line-height: 1.38;
+}
+
+.full-row p {
+  color: var(--muted);
 }
 
 .ticket-grid {
@@ -245,6 +312,8 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
 
   .exam-layout,
   .tools,
+  .full-row,
+  .full-row-wide,
   .question-card summary {
     grid-template-columns: 1fr;
   }
