@@ -331,9 +331,11 @@ const fullTabs = document.querySelector('#fullTabs');
 const fullSearch = document.querySelector('#fullSearch');
 const fullStatus = document.querySelector('#fullStatus');
 const fullList = document.querySelector('#fullList');
+const fullMaterial = document.querySelector('#fullMaterial');
+const showAllBtn = document.querySelector('#showAllBtn');
 
 const fullState = {
-  section: 'translations',
+  section: 'all',
   query: '',
 };
 
@@ -359,6 +361,7 @@ function normalize(value) {
 }
 
 function fullLabel(section, item) {
+  if (section === 'all') return item.searchText;
   if (section === 'translations') return `${item.ru} ${item.en}`;
   if (section === 'definitions') return `${item.term} ${item.definition}`;
   if (section === 'abbreviations') return `${item.abbr} ${item.full}`;
@@ -366,6 +369,14 @@ function fullLabel(section, item) {
 }
 
 function getFullRows() {
+  if (fullState.section === 'all') {
+    return [
+      ...termData.translations.map((item, index) => ({ section: 'translations', index, item, searchText: `${item.ru} ${item.en}` })),
+      ...termData.definitions.map((item, index) => ({ section: 'definitions', index, item, searchText: `${item.term} ${item.definition}` })),
+      ...termData.abbreviations.map((item, index) => ({ section: 'abbreviations', index, item, searchText: `${item.abbr} ${item.full}` })),
+      ...examQuestions.map((item, index) => ({ section: 'questions', index, item, searchText: `${item.question} ${item.answer.join(' ')}` })),
+    ];
+  }
   if (fullState.section === 'translations') return termData.translations;
   if (fullState.section === 'definitions') return termData.definitions;
   if (fullState.section === 'abbreviations') return termData.abbreviations;
@@ -374,6 +385,7 @@ function getFullRows() {
 
 function renderFullTabs() {
   const tabs = [
+    ['all', 'Все вместе'],
     ['translations', `Перевод (${termData.translations.length})`],
     ['definitions', `Термины (${termData.definitions.length})`],
     ['abbreviations', `Аббревиатуры (${termData.abbreviations.length})`],
@@ -387,6 +399,9 @@ function renderFullTabs() {
 }
 
 function renderFullRow(item, index) {
+  if (fullState.section === 'all') {
+    return renderFullMixedRow(item);
+  }
   if (fullState.section === 'translations') {
     return `
       <article class="full-row">
@@ -423,6 +438,48 @@ function renderFullRow(item, index) {
       </summary>
       <div class="model-answer">
         ${item.answer.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
+      </div>
+    </details>
+  `;
+}
+
+function renderFullMixedRow(row) {
+  if (row.section === 'translations') {
+    return `
+      <article class="full-row">
+        <span class="full-kind">Перевод<br>#${row.index + 1}</span>
+        <strong>${escapeHtml(row.item.ru)}</strong>
+        <p>${escapeHtml(row.item.en)}</p>
+      </article>
+    `;
+  }
+  if (row.section === 'definitions') {
+    return `
+      <article class="full-row full-row-wide">
+        <span class="full-kind">Термин<br>#${row.index + 1}</span>
+        <strong>${escapeHtml(row.item.term)}</strong>
+        <p>${escapeHtml(row.item.definition)}</p>
+      </article>
+    `;
+  }
+  if (row.section === 'abbreviations') {
+    return `
+      <article class="full-row">
+        <span class="full-kind">Сокр.<br>#${row.index + 1}</span>
+        <strong>${escapeHtml(row.item.abbr)}</strong>
+        <p>${escapeHtml(row.item.full)}</p>
+      </article>
+    `;
+  }
+  return `
+    <details class="question-card">
+      <summary>
+        <span class="full-kind">Вопрос<br>#${row.index + 1}</span>
+        <span>${escapeHtml(row.item.question)}</span>
+        <span class="semester">${row.item.semester} сем.</span>
+      </summary>
+      <div class="model-answer">
+        ${row.item.answer.map((paragraph) => `<p>${escapeHtml(paragraph)}</p>`).join('')}
       </div>
     </details>
   `;
@@ -505,6 +562,13 @@ function renderQuestions() {
 }
 
 document.querySelector('#newTicketBtn').addEventListener('click', renderTicket);
+showAllBtn.addEventListener('click', () => {
+  fullState.section = 'all';
+  fullState.query = '';
+  fullSearch.value = '';
+  renderFullList();
+  fullMaterial.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 ticketGrid.addEventListener('click', (event) => {
   const button = event.target.closest('.reveal-btn');
   if (!button) return;

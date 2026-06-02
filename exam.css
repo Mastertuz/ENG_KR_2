@@ -137,6 +137,13 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   gap: 10px;
 }
 
+.head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 .tools input,
 .tools select,
 .full-panel input,
@@ -214,6 +221,17 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
 
 .full-row p {
   color: var(--muted);
+}
+
+.full-kind {
+  width: max-content;
+  padding: 4px 8px;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--green);
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1.2;
 }
 
 .ticket-grid {
@@ -319,6 +337,10 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   }
 
   .site-nav {
+    justify-content: flex-start;
+  }
+
+  .head-actions {
     justify-content: flex-start;
   }
 
