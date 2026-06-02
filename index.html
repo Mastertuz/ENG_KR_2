@@ -32,7 +32,7 @@
 
       .entry-actions {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 16px;
         margin-top: 28px;
       }
@@ -56,6 +56,10 @@
         background: linear-gradient(90deg, rgba(207, 77, 56, 0.12), transparent 42%), #fff;
       }
 
+      .entry-card.exam {
+        background: linear-gradient(90deg, rgba(199, 131, 22, 0.14), transparent 42%), #fff;
+      }
+
       .entry-card span {
         width: max-content;
         padding: 6px 10px;
@@ -67,6 +71,10 @@
 
       .entry-card.accent span {
         background: #cf4d38;
+      }
+
+      .entry-card.exam span {
+        background: #c78316;
       }
 
       .entry-card strong {
@@ -93,7 +101,7 @@
       <section class="entry-hero" aria-label="Выбор контрольной работы">
         <p class="eyebrow">Контрольная работа по английскому</p>
         <h1>Выберите раздел</h1>
-        <p>КР-2 для терминов, переводов и аббревиатур. КР-3 для вопросов и устных ответов.</p>
+        <p>КР-2 для терминов и аббревиатур. КР-3 для контрольной. Экзамен для билетов по 3 и 4 семестрам.</p>
         <div class="entry-actions">
           <a class="entry-card" href="kr2.html">
             <span>КР-2</span>
@@ -104,6 +112,11 @@
             <span>КР-3</span>
             <strong>Вопросы</strong>
             <small>Ответы и тренировка устной части</small>
+          </a>
+          <a class="entry-card exam" href="exam.html">
+            <span>Экзамен</span>
+            <strong>Билеты</strong>
+            <small>Лексика, термины и 6 устных вопросов</small>
           </a>
         </div>
       </section>

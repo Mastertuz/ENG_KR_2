@@ -141,7 +141,7 @@ h2 {
 
 .entry-actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
   margin-top: 28px;
 }
@@ -176,6 +176,12 @@ h2 {
     #fff;
 }
 
+.entry-card.exam {
+  background:
+    linear-gradient(90deg, rgba(199, 131, 22, 0.14), transparent 42%),
+    #fff;
+}
+
 .entry-card span {
   width: max-content;
   padding: 6px 10px;
@@ -187,6 +193,10 @@ h2 {
 
 .entry-card.accent span {
   background: var(--coral);
+}
+
+.entry-card.exam span {
+  background: var(--amber);
 }
 
 .entry-card strong {
