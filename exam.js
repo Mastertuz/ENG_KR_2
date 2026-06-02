@@ -339,6 +339,7 @@ const trainingResult = document.querySelector('#trainingResult');
 const trainingType = document.querySelector('#trainingType');
 const trainingTitle = document.querySelector('#trainingTitle');
 const trainingProgress = document.querySelector('#trainingProgress');
+const trainingProgressBar = document.querySelector('#trainingProgressBar');
 const trainingPrompt = document.querySelector('#trainingPrompt');
 const trainingAnswer = document.querySelector('#trainingAnswer');
 const trainingFeedback = document.querySelector('#trainingFeedback');
@@ -385,13 +386,56 @@ function normalize(value) {
 
 function isCloseAnswer(userAnswer, correctAnswer) {
   const user = normalize(userAnswer);
-  const correct = normalize(correctAnswer);
   if (!user) return false;
-  if (user === correct) return true;
-  const variants = new Set([correct]);
-  String(correctAnswer).split(/\s*(?:;|,|\/|\bor\b)\s*/i).forEach((part) => variants.add(normalize(part)));
-  String(correctAnswer).match(/\(([^)]+)\)/g)?.forEach((part) => variants.add(normalize(part.replace(/[()]/g, ''))));
-  return [...variants].filter(Boolean).some((variant) => user === variant);
+  const parts = splitAnswerVariants(correctAnswer);
+  if (parts.includes(user)) return true;
+
+  const minExpectedLength = Math.min(...parts.map((part) => part.length));
+  if (user.length < Math.min(3, minExpectedLength)) return false;
+
+  return parts.some((part) => {
+    if (part.length < 5 || user.length < 5) return false;
+    const distance = levenshteinDistance(user, part);
+    const similarity = 1 - distance / Math.max(user.length, part.length);
+    return similarity >= 0.86;
+  });
+}
+
+function splitAnswerVariants(answer) {
+  const raw = String(answer);
+  const variants = new Set([normalize(raw)]);
+  const parenthetical = [...raw.matchAll(/\(([^)]+)\)/g)].map((match) => match[1]);
+  parenthetical.forEach((part) => variants.add(normalize(part)));
+  variants.add(normalize(raw.replace(/\([^)]*\)/g, ' ')));
+  raw
+    .split(/\s*(?:;|,|\/|\bor\b)\s*/i)
+    .forEach((part) => {
+      variants.add(normalize(part));
+      variants.add(normalize(part.replace(/\([^)]*\)/g, ' ')));
+    });
+  return [...variants].filter(Boolean);
+}
+
+function levenshteinDistance(a, b) {
+  const previous = Array.from({ length: b.length + 1 }, (_, index) => index);
+  const current = Array.from({ length: b.length + 1 }, () => 0);
+
+  for (let i = 1; i <= a.length; i += 1) {
+    current[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      current[j] = Math.min(
+        current[j - 1] + 1,
+        previous[j] + 1,
+        previous[j - 1] + cost,
+      );
+    }
+    for (let j = 0; j <= b.length; j += 1) {
+      previous[j] = current[j];
+    }
+  }
+
+  return previous[b.length];
 }
 
 function extractKeywords(text) {
@@ -633,9 +677,13 @@ function startExamTraining() {
 
 function renderTrainingTask() {
   const task = trainingState.tasks[trainingState.index];
+  const total = trainingState.tasks.length;
   trainingType.textContent = task.type;
   trainingTitle.textContent = task.title;
-  trainingProgress.textContent = `${trainingState.index + 1} / ${trainingState.tasks.length}`;
+  trainingProgress.textContent = `${trainingState.index + 1} / ${total}`;
+  if (trainingProgressBar) {
+    trainingProgressBar.style.width = `${Math.round((trainingState.index / total) * 100)}%`;
+  }
   trainingPrompt.innerHTML = `<strong>${escapeHtml(task.prompt)}</strong>`;
   trainingAnswer.value = '';
   trainingAnswer.disabled = false;
@@ -648,24 +696,29 @@ function renderTrainingTask() {
 
 function checkTrainingTask() {
   const task = trainingState.tasks[trainingState.index];
-  const userAnswer = trainingAnswer.value;
+  const userAnswer = trainingAnswer.value.trim();
   let isCorrect = false;
   let feedback = '';
+  let details = '';
 
   if (task.mode === 'short') {
     isCorrect = isCloseAnswer(userAnswer, task.answer);
+    details = isCorrect ? 'Ответ совпал с допустимым вариантом.' : 'Ответ не совпал с правильным вариантом.';
     feedback = `
       <div class="answer-check ${isCorrect ? 'correct' : 'wrong'}">
         <strong>${isCorrect ? 'Верно' : 'Нужно повторить'}</strong>
+        <p>Ваш ответ: ${escapeHtml(userAnswer || 'нет ответа')}</p>
         <p>Правильный ответ: ${escapeHtml(task.answer)}</p>
       </div>
     `;
   } else {
     const analysis = analyzeOralAnswer(userAnswer, task.answer);
     isCorrect = analysis.score >= 45;
+    details = `Покрытие ключевых слов: ${analysis.score}%.`;
     feedback = `
       <div class="answer-check ${isCorrect ? 'correct' : 'wrong'}">
-        <strong>Покрытие ключевых слов: ${analysis.score}%</strong>
+        <strong>${isCorrect ? 'Зачтено' : 'Нужно повторить'} — покрытие ключевых слов: ${analysis.score}%</strong>
+        <p>Ваш ответ: ${escapeHtml(userAnswer || 'нет ответа')}</p>
         <p>Нашлось: ${analysis.matched.join(', ') || 'нет совпадений'}</p>
         <p>Не хватает: ${analysis.missing.slice(0, 10).join(', ') || 'основные слова есть'}</p>
       </div>
@@ -678,9 +731,19 @@ function checkTrainingTask() {
   if (isCorrect) {
     trainingState.correct += 1;
   } else {
-    trainingState.mistakes.push({ prompt: task.prompt, answer: task.answer });
+    trainingState.mistakes.push({
+      type: task.type,
+      title: task.title,
+      prompt: task.prompt,
+      userAnswer: userAnswer || 'нет ответа',
+      correctAnswer: task.answer,
+      details,
+    });
   }
   trainingAnswer.disabled = true;
+  if (trainingProgressBar) {
+    trainingProgressBar.style.width = `${Math.round(((trainingState.index + 1) / trainingState.tasks.length) * 100)}%`;
+  }
   trainingFeedback.innerHTML = feedback;
   trainingFeedback.classList.remove('hidden');
   checkTrainingBtn.classList.add('hidden');
@@ -709,8 +772,11 @@ function renderTrainingResult() {
       <div class="repeat-list">
         ${trainingState.mistakes.map((item) => `
           <article>
+            <span>${escapeHtml(item.type)} · ${escapeHtml(item.title)}</span>
             <strong>${escapeHtml(item.prompt)}</strong>
-            <p>${escapeHtml(item.answer)}</p>
+            <p><b>Ваш ответ:</b> ${escapeHtml(item.userAnswer)}</p>
+            <p><b>Правильно:</b> ${escapeHtml(item.correctAnswer)}</p>
+            <p><b>Проверка:</b> ${escapeHtml(item.details)}</p>
           </article>
         `).join('')}
       </div>

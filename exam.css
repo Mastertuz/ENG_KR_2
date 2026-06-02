@@ -398,6 +398,22 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   font-weight: 900;
 }
 
+.training-meter {
+  height: 12px;
+  margin: -4px 0 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #dfe8dc;
+}
+
+.training-meter div {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--green);
+  transition: width 220ms ease;
+}
+
 .training-prompt {
   padding: 18px;
   border: 1px solid var(--line);
@@ -469,10 +485,27 @@ h2 { font-size: clamp(24px, 3vw, 36px); line-height: 1.05; }
   background: #fbfdf9;
 }
 
+.repeat-list span {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--coral);
+  font-size: 12px;
+  font-weight: 900;
+}
+
 .repeat-list p {
   margin-top: 8px;
   color: var(--muted);
   line-height: 1.45;
+}
+
+.repeat-list b {
+  color: var(--ink);
 }
 
 .ticket-group {
